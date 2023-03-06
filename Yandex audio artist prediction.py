@@ -98,7 +98,7 @@ class TrainLoader:
                 
         batch_ids = []
         
-        for pair_ids in self._get_pair_ids(): ##(74503?, 2)
+        for pair_ids in self._get_pair_ids(): ##(74503, 2)
             batch_ids.append(pair_ids)
             ### pair_ids - это генератор, поэтому при новом запуске, он считывается с прошлого места
             ### прочитанные элементы удаляются 
@@ -135,12 +135,11 @@ class NT_Xent(nn.Module):
     Считает loss и avg_rank
     '''
     
-    
     def __init__(self, temperature):
         super(NT_Xent, self).__init__()
         self.temperature = temperature
-        self.criterion = nn.CrossEntropyLoss(reduction="mean") # поменял sum на mean и убрал деление на N внизу
-        self.similarity_f = nn.CosineSimilarity(dim=2) # 
+        self.criterion = nn.CrossEntropyLoss(reduction="mean")
+        self.similarity_f = nn.CosineSimilarity(dim=2)
 
     def mask_correlated_samples(self, batch_size):
         ### матрица из 4х блоков (batch_size x batch_size).
@@ -247,7 +246,7 @@ Train & Inference functions
 '''
 
 class BasicNet(nn.Module):
-    def __init__(self, output_features_size): ## по умолчанию 256
+    def __init__(self, output_features_size):
         super().__init__()
         self.output_features_size = output_features_size       
         self.trans_layer = nn.TransformerEncoderLayer(d_model=512, nhead=4, dropout=0.1, activation='gelu')
@@ -315,9 +314,7 @@ def inference(model, loader):
 def train(module, train_loader, val_loader, valset_meta, optimizer, criterion, num_epochs, checkpoint_path,
           temperature_list, scheduler, top_size = 100):
     max_ndcg = None
-    
-    global train_progres
-    
+        
     train_progres = []  
 
     for epoch in range(num_epochs):
